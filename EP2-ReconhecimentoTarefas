@@ -1,0 +1,24 @@
+puts "Expressões Regulares"
+puts
+entrada = "Agendar com Lucas reunião às 21:00 amanhã #trabalho, email:legal_33@sp.senac.br , https://www.sp.senac.br"
+
+def saida(entrada) 
+
+    saida = Hash.new
+    saida["Ação"] =(/\b\w+r\b/).match(entrada) #Ação
+    saida["Pessoa"] =(/(?<=(e\s|\,\s))([ÍÉÂA-zãéêíóúü])+|(?<=(com\s))([ÍÉÂA-zãéêíóúü])+|(?<=(para\s))([ÍÉÂA-zãéêíóúü])+/).match(entrada) #pessoa   
+    saida["Dia"] = (/([0-3]\d\sde\s[A-z]+(\sde\s\d{4})?)|([0-3]\d\/[0-3]\d(\/\d{4})?)|(amanhã|hoje|depois de amanhã)/).match(entrada)#dia
+    saida["Horas"] = /([0-2]?[0-9](\s|:)[0-9]{2}\s?(horas|hora|h)?)|([0-9]{1,2}\s?(horas|hora|h))|(ás\s[0-9]{1,2})/.match(entrada) # horas
+    saida["Email"] = /(\w+(\.|\-|\_)*)+\@([A-z]+\.)+([A-z])+/.match(entrada)#email
+    saida["URL"] = /(https?:\/\/([A-Za-z0-9-]+\.?)+\.[a-z]+)(\/([a-z0-9-]+#)?([a-z0-9-]+\??)((?<=\?)([a-z0-9-]+=[a-z0-9-]+&?)*)?)?/.match(entrada)#url
+    saida["Tag"] =(/(#\w+)/).match(entrada) #Tags
+    
+    saida.delete_if { |key, value| value.to_s.empty? }
+    saida.each do |key, value|
+      puts "#{key}: #{value}"
+    end
+   
+end
+
+
+saida(entrada)
